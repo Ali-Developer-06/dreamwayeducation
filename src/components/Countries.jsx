@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FiArrowRight, FiArrowUpRight, FiGlobe, FiTrendingUp, FiBriefcase, FiUsers, FiStar } from 'react-icons/fi'
@@ -33,6 +33,20 @@ const whyReasons = [
 const regions = ['All', 'Europe', 'Asia', 'Pacific', 'Americas']
 
 export default function Countries() {
+  // ─── Responsive state ───────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const [activeRegion, setActiveRegion] = useState('All')
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
@@ -40,30 +54,34 @@ export default function Countries() {
     ? countries
     : countries.filter(c => c.region === activeRegion)
 
+  const whyReasonsGrid = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+  const countriesGrid = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+
   return (
     <main style={{ overflowX: 'hidden' }}>
 
       {/* ── HERO ── */}
       <section style={{
-        paddingTop: '140px', paddingBottom: '80px',
+        paddingTop: isMobile ? '120px' : '140px', 
+        paddingBottom: isMobile ? '50px' : '80px',
         background: 'linear-gradient(160deg, #f0fafa 0%, #eef4fb 60%, #f9fafb 100%)',
         position: 'relative', overflow: 'hidden',
       }}>
         {/* Decorative circles */}
-        <div style={{ position: 'absolute', top: '-120px', right: '-120px', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-80px', left: '10%', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-120px', right: '-120px', width: isMobile ? '250px' : '500px', height: isMobile ? '250px' : '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-80px', left: '10%', width: isMobile ? '180px' : '300px', height: isMobile ? '180px' : '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-        {/* Floating flags background */}
+        {/* Floating flags background — fewer flags on mobile */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-          {['🇬🇧', '🇨🇦', '🇦🇺', '🇩🇪', '🇲🇾', '🇹🇷', '🇳🇿', '🇫🇷'].map((flag, i) => (
+          {(isMobile ? ['🇬🇧', '🇨🇦', '🇦🇺', '🇩🇪'] : ['🇬🇧', '🇨🇦', '🇦🇺', '🇩🇪', '🇲🇾', '🇹🇷', '🇳🇿', '🇫🇷']).map((flag, i) => (
             <motion.span
               key={i}
               animate={{ y: [0, -20, 0], opacity: [0.12, 0.22, 0.12] }}
               transition={{ duration: 4 + i * 0.7, repeat: Infinity, ease: 'easeInOut', delay: i * 0.5 }}
               style={{
-                position: 'absolute', fontSize: '48px',
-                left: `${8 + i * 12}%`,
-                top: `${20 + (i % 3) * 25}%`,
+                position: 'absolute', fontSize: isMobile ? '32px' : '48px',
+                left: `${12 + i * (isMobile ? 22 : 12)}%`,
+                top: `${20 + (i % (isMobile ? 2 : 3)) * (isMobile ? 35 : 25)}%`,
                 filter: 'blur(1px)',
               }}
             >
@@ -81,7 +99,7 @@ export default function Countries() {
               borderRadius: '100px', padding: '6px 18px', marginBottom: '24px',
             }}>
               <FiGlobe size={14} color="#23AAA6" />
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6' }}>15 Destinations Worldwide</span>
+              <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: '600', color: '#23AAA6' }}>15 Destinations Worldwide</span>
             </div>
 
             <h1 style={{
@@ -92,7 +110,7 @@ export default function Countries() {
               <span style={{ color: '#23AAA6' }}>Study Destination</span>
             </h1>
 
-            <p style={{ fontSize: '18px', color: '#6b7280', lineHeight: '1.75', maxWidth: '520px', margin: '0 auto' }}>
+            <p style={{ fontSize: isMobile ? '15px' : '18px', color: '#6b7280', lineHeight: '1.75', maxWidth: '520px', margin: '0 auto' }}>
               We help Pakistani students gain admission to top universities across 15 countries — from Europe to Australia and beyond.
             </p>
           </motion.div>
@@ -100,7 +118,7 @@ export default function Countries() {
           {/* Stats row */}
           <motion.div
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-            style={{ display: 'flex', justifyContent: 'center', gap: '48px', marginTop: '56px', flexWrap: 'wrap' }}
+            style={{ display: 'flex', justifyContent: 'center', gap: isMobile ? '24px' : '48px', marginTop: isMobile ? '40px' : '56px', flexWrap: 'wrap', rowGap: isMobile ? '20px' : '48px' }}
           >
             {[
               { value: '15+', label: 'Countries' },
@@ -109,8 +127,8 @@ export default function Countries() {
               { value: '98%', label: 'Visa Success' },
             ].map((s, i) => (
               <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.1 }}
-                style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: '32px', fontWeight: '800', color: '#111827', lineHeight: '1' }}>{s.value}</p>
+                style={{ textAlign: 'center', minWidth: isMobile ? '120px' : 'auto' }}>
+                <p style={{ fontSize: isMobile ? '28px' : '32px', fontWeight: '800', color: '#111827', lineHeight: '1' }}>{s.value}</p>
                 <p style={{ fontSize: '13px', color: '#9ca3af', fontWeight: '500', marginTop: '4px' }}>{s.label}</p>
               </motion.div>
             ))}
@@ -119,10 +137,10 @@ export default function Countries() {
       </section>
 
       {/* ── WHY STUDY ABROAD ── */}
-      <section style={{ padding: '100px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            style={{ textAlign: 'center', marginBottom: '64px' }}>
+            style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '64px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>The Dream Worth Chasing</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,44px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px', lineHeight: '1.2' }}>
               Why Study Abroad?
@@ -132,7 +150,7 @@ export default function Countries() {
             </p>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: whyReasonsGrid, gap: isMobile ? '16px' : '24px' }}>
             {whyReasons.map((r, i) => (
               <motion.div
                 key={r.title}
@@ -142,7 +160,7 @@ export default function Countries() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 whileHover={{ y: -6 }}
                 style={{
-                  padding: '32px', borderRadius: '20px',
+                  padding: isMobile ? '24px 20px' : '32px', borderRadius: '20px',
                   background: i % 2 === 0 ? 'linear-gradient(135deg, rgba(35,170,166,0.04), rgba(38,93,150,0.04))' : 'white',
                   border: '1px solid', borderColor: i % 2 === 0 ? 'rgba(35,170,166,0.12)' : '#f3f4f6',
                   transition: 'all 0.3s ease', cursor: 'default',
@@ -164,12 +182,12 @@ export default function Countries() {
       </section>
 
       {/* ── COUNTRIES GRID ── */}
-      <section style={{ padding: '80px 24px 100px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '50px 16px 60px' : '80px 24px 100px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
           {/* Section header */}
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
+            style={{ display: 'flex', justifyContent: isMobile ? 'flex-start' : 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', marginBottom: isMobile ? '24px' : '40px', flexWrap: 'wrap', gap: '20px', flexDirection: isMobile ? 'column' : 'row' }}>
             <div>
               <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Explore All</span>
               <h2 style={{ fontSize: 'clamp(26px,4vw,40px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '8px' }}>
@@ -178,13 +196,13 @@ export default function Countries() {
             </div>
 
             {/* Region filter */}
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: isMobile ? '6px' : '8px', flexWrap: 'wrap' }}>
               {regions.map(r => (
                 <button
                   key={r}
                   onClick={() => setActiveRegion(r)}
                   style={{
-                    padding: '8px 18px', borderRadius: '100px', fontSize: '13px', fontWeight: '600',
+                    padding: isMobile ? '6px 14px' : '8px 18px', borderRadius: '100px', fontSize: isMobile ? '12px' : '13px', fontWeight: '600',
                     border: '1.5px solid', cursor: 'pointer', transition: 'all 0.2s ease',
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                     borderColor: activeRegion === r ? '#23AAA6' : '#e5e7eb',
@@ -201,7 +219,7 @@ export default function Countries() {
           {/* Cards grid */}
           <motion.div
             layout
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}
+            style={{ display: 'grid', gridTemplateColumns: countriesGrid, gap: isMobile ? '14px' : '20px' }}
           >
             {filtered.map((c, i) => (
               <motion.div
@@ -216,7 +234,7 @@ export default function Countries() {
               >
                 <Link to={`/countries/${c.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
                   <div style={{
-                    background: 'white', borderRadius: '20px', padding: '28px',
+                    background: 'white', borderRadius: '20px', padding: isMobile ? '20px' : '28px',
                     border: '1.5px solid',
                     borderColor: hoveredIndex === i ? '#23AAA6' : '#e5e7eb',
                     boxShadow: hoveredIndex === i ? '0 16px 48px rgba(35,170,166,0.14)' : '0 2px 8px rgba(0,0,0,0.04)',
@@ -227,7 +245,7 @@ export default function Countries() {
 
                     {/* Top row */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ fontSize: '48px', lineHeight: '1' }}>{c.flag}</span>
+                      <span style={{ fontSize: isMobile ? '38px' : '48px', lineHeight: '1' }}>{c.flag}</span>
                       <div style={{
                         width: '36px', height: '36px', borderRadius: '50%',
                         background: hoveredIndex === i ? '#23AAA6' : 'rgba(35,170,166,0.08)',
@@ -269,8 +287,8 @@ export default function Countries() {
           </motion.div>
 
           {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '80px 0', color: '#9ca3af' }}>
-              <p style={{ fontSize: '48px', marginBottom: '12px' }}>🌍</p>
+            <div style={{ textAlign: 'center', padding: isMobile ? '50px 0' : '80px 0', color: '#9ca3af' }}>
+              <p style={{ fontSize: isMobile ? '36px' : '48px', marginBottom: '12px' }}>🌍</p>
               <p style={{ fontSize: '17px', fontWeight: '600', color: '#374151' }}>No countries in this region yet</p>
             </div>
           )}
@@ -278,7 +296,7 @@ export default function Countries() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: '0 24px 100px' }}>
+      <section style={{ padding: isMobile ? '0 16px 60px' : '0 24px 100px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -287,13 +305,13 @@ export default function Countries() {
             transition={{ duration: 0.6 }}
             style={{
               background: 'linear-gradient(135deg, #23AAA6 0%, #265D96 100%)',
-              borderRadius: '28px', padding: '72px 48px', textAlign: 'center',
+              borderRadius: '28px', padding: isMobile ? '48px 24px' : '72px 48px', textAlign: 'center',
               position: 'relative', overflow: 'hidden',
             }}
           >
             {/* Decorative blobs */}
-            <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '320px', height: '320px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '240px', height: '240px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: isMobile ? '200px' : '320px', height: isMobile ? '200px' : '320px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: isMobile ? '160px' : '240px', height: isMobile ? '160px' : '240px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
 
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
               <p style={{ fontSize: '13px', fontWeight: '600', color: 'rgba(255,255,255,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '16px' }}>
@@ -302,7 +320,7 @@ export default function Countries() {
               <h2 style={{ fontSize: 'clamp(26px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: 'white', marginBottom: '16px', lineHeight: '1.2' }}>
                 Not Sure Which Country<br />Is Right for You?
               </h2>
-              <p style={{ fontSize: '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '40px', maxWidth: '480px', margin: '0 auto 40px', lineHeight: '1.7' }}>
+              <p style={{ fontSize: isMobile ? '15px' : '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '40px', maxWidth: '480px', margin: '0 auto 40px', lineHeight: '1.7' }}>
                 Our expert counselors will evaluate your profile and recommend the best destination for your goals and budget.
               </p>
               <Link

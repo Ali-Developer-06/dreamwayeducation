@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FiStar, FiArrowRight, FiFilter } from 'react-icons/fi'
@@ -182,7 +182,7 @@ function StarRating({ rating }) {
   )
 }
 
-function TestimonialCard({ t, index }) {
+function TestimonialCard({ t, index, isMobile }) {
   const isLarge = t.size === 'large'
   const isMedium = t.size === 'medium'
 
@@ -197,7 +197,7 @@ function TestimonialCard({ t, index }) {
       style={{
         background: 'white',
         borderRadius: '20px',
-        padding: isLarge ? '36px' : '28px',
+        padding: isLarge && !isMobile ? '36px' : isMobile ? '24px 20px' : '28px',
         border: '1px solid #f3f4f6',
         boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
         transition: 'all 0.3s ease',
@@ -206,12 +206,12 @@ function TestimonialCard({ t, index }) {
         flexDirection: 'column',
         gap: '16px',
         breakInside: 'avoid',
-        marginBottom: '20px',
+        marginBottom: isMobile ? '16px' : '20px',
       }}
     >
       {/* Quote mark */}
       <div style={{
-        fontSize: isLarge ? '52px' : '40px',
+        fontSize: isLarge && !isMobile ? '52px' : '40px',
         lineHeight: '1',
         color: t.color,
         opacity: 0.12,
@@ -227,7 +227,7 @@ function TestimonialCard({ t, index }) {
 
       {/* Quote */}
       <p style={{
-        fontSize: isLarge ? '16px' : isMedium ? '15px' : '14px',
+        fontSize: isLarge && !isMobile ? '16px' : isMedium && !isMobile ? '15px' : '14px',
         color: '#374151',
         lineHeight: '1.8',
         fontStyle: 'italic',
@@ -275,34 +275,54 @@ function TestimonialCard({ t, index }) {
 }
 
 export default function Testimonials() {
+  // ─── Responsive state ───────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const [activeCountry, setActiveCountry] = useState('All')
 
   const filtered = activeCountry === 'All'
     ? testimonials
     : testimonials.filter(t => t.country === activeCountry)
 
-  // Split into 3 columns for masonry
-  const col1 = filtered.filter((_, i) => i % 3 === 0)
-  const col2 = filtered.filter((_, i) => i % 3 === 1)
-  const col3 = filtered.filter((_, i) => i % 3 === 2)
+  // Split into columns for masonry — 2 columns on tablet, 1 on mobile
+  const numColumns = isMobile ? 1 : isTablet ? 2 : 3
+
+  const columns = []
+  for (let col = 0; col < numColumns; col++) {
+    columns.push(filtered.filter((_, i) => i % numColumns === col))
+  }
+
+  const masonryGridColumns = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
 
   return (
     <main style={{ overflowX: 'hidden' }}>
 
       {/* ── HERO ── */}
       <section style={{
-        paddingTop: '140px', paddingBottom: '80px',
+        paddingTop: isMobile ? '120px' : '140px', 
+        paddingBottom: isMobile ? '50px' : '80px',
         background: 'linear-gradient(160deg, #f0fafa 0%, #eef4fb 60%, #f9fafb 100%)',
         position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: isMobile ? '250px' : '500px', height: isMobile ? '250px' : '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: isMobile ? '180px' : '300px', height: isMobile ? '180px' : '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(35,170,166,0.1)', border: '1px solid rgba(35,170,166,0.2)', borderRadius: '100px', padding: '6px 18px', marginBottom: '24px' }}>
               <FiStar size={13} fill="#C97E5E" color="#C97E5E" />
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6' }}>2,500+ Success Stories</span>
+              <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: '600', color: '#23AAA6' }}>2,500+ Success Stories</span>
             </div>
 
             <h1 style={{ fontSize: 'clamp(36px, 5vw, 58px)', fontFamily: "'Fraunces', serif", fontWeight: '600', color: '#111827', lineHeight: '1.15', marginBottom: '18px' }}>
@@ -310,12 +330,12 @@ export default function Testimonials() {
               <span style={{ color: '#23AAA6' }}>Real Results.</span>
             </h1>
 
-            <p style={{ fontSize: '17px', color: '#6b7280', lineHeight: '1.8', maxWidth: '520px', margin: '0 auto 40px' }}>
+            <p style={{ fontSize: isMobile ? '15px' : '17px', color: '#6b7280', lineHeight: '1.8', maxWidth: '520px', margin: '0 auto 40px' }}>
               Thousands of Pakistani students have trusted Dreamway Education to guide them to their dream universities. Here are their stories.
             </p>
 
             {/* Stats row */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '48px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: isMobile ? '20px' : '48px', flexWrap: 'wrap', rowGap: isMobile ? '16px' : '48px' }}>
               {[
                 { value: '2,500+', label: 'Students Placed' },
                 { value: '98%', label: 'Visa Success Rate' },
@@ -323,8 +343,8 @@ export default function Testimonials() {
                 { value: '4.9/5', label: 'Average Rating' },
               ].map((s, i) => (
                 <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }}
-                  style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '30px', fontWeight: '800', color: '#111827', lineHeight: '1' }}>{s.value}</p>
+                  style={{ textAlign: 'center', minWidth: isMobile ? '100px' : 'auto' }}>
+                  <p style={{ fontSize: isMobile ? '26px' : '30px', fontWeight: '800', color: '#111827', lineHeight: '1' }}>{s.value}</p>
                   <p style={{ fontSize: '13px', color: '#9ca3af', fontWeight: '500', marginTop: '4px' }}>{s.label}</p>
                 </motion.div>
               ))}
@@ -334,9 +354,9 @@ export default function Testimonials() {
       </section>
 
       {/* ── FILTER ── */}
-      <section style={{ padding: '48px 24px 0', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '32px 16px 0' : '48px 24px 0', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: isMobile ? '6px' : '10px', flexWrap: 'wrap', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#9ca3af', marginRight: '4px' }}>
               <FiFilter size={14} />
               <span style={{ fontSize: '13px', fontWeight: '600' }}>Filter:</span>
@@ -346,7 +366,7 @@ export default function Testimonials() {
                 key={c}
                 onClick={() => setActiveCountry(c)}
                 style={{
-                  padding: '7px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: '600',
+                  padding: isMobile ? '6px 12px' : '7px 16px', borderRadius: '100px', fontSize: isMobile ? '11px' : '13px', fontWeight: '600',
                   border: '1.5px solid', cursor: 'pointer', transition: 'all 0.2s ease',
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   borderColor: activeCountry === c ? '#23AAA6' : '#e5e7eb',
@@ -362,41 +382,35 @@ export default function Testimonials() {
       </section>
 
       {/* ── MASONRY GRID ── */}
-      <section style={{ padding: '40px 24px 100px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '32px 16px 60px' : '40px 24px 100px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
           {filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 0' }}>
-              <p style={{ fontSize: '48px', marginBottom: '12px' }}>💬</p>
+            <div style={{ textAlign: 'center', padding: isMobile ? '50px 0' : '80px 0' }}>
+              <p style={{ fontSize: isMobile ? '36px' : '48px', marginBottom: '12px' }}>💬</p>
               <p style={{ fontSize: '17px', fontWeight: '600', color: '#374151' }}>No testimonials for this country yet</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', alignItems: 'start' }}>
-              {/* Column 1 */}
-              <div>
-                {col1.map((t, i) => (
-                  <TestimonialCard key={t.name} t={t} index={i * 3} />
-                ))}
-              </div>
-              {/* Column 2 — offset top */}
-              <div style={{ marginTop: '40px' }}>
-                {col2.map((t, i) => (
-                  <TestimonialCard key={t.name} t={t} index={i * 3 + 1} />
-                ))}
-              </div>
-              {/* Column 3 — offset more */}
-              <div style={{ marginTop: '80px' }}>
-                {col3.map((t, i) => (
-                  <TestimonialCard key={t.name} t={t} index={i * 3 + 2} />
-                ))}
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: masonryGridColumns, gap: isMobile ? '0' : '20px', alignItems: 'start' }}>
+              {columns.map((colItems, colIndex) => (
+                <div key={colIndex} style={{ marginTop: isMobile ? '0' : colIndex === 0 ? '0' : colIndex === 1 ? '40px' : '80px' }}>
+                  {colItems.map((t, i) => (
+                    <TestimonialCard 
+                      key={t.name} 
+                      t={t} 
+                      index={i * numColumns + colIndex} 
+                      isMobile={isMobile}
+                    />
+                  ))}
+                </div>
+              ))}
             </div>
           )}
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: '0 24px 100px' }}>
+      <section style={{ padding: isMobile ? '0 16px 60px' : '0 24px 100px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -405,12 +419,12 @@ export default function Testimonials() {
             transition={{ duration: 0.6 }}
             style={{
               background: 'linear-gradient(135deg, #23AAA6, #265D96)',
-              borderRadius: '28px', padding: '72px 48px',
+              borderRadius: '28px', padding: isMobile ? '48px 24px' : '72px 48px',
               textAlign: 'center', position: 'relative', overflow: 'hidden',
             }}
           >
-            <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '240px', height: '240px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: isMobile ? '200px' : '300px', height: isMobile ? '200px' : '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: isMobile ? '160px' : '240px', height: isMobile ? '160px' : '240px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
 
             <p style={{ fontSize: '13px', fontWeight: '600', color: 'rgba(255,255,255,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '16px' }}>
               Your Story Starts Here
@@ -418,7 +432,7 @@ export default function Testimonials() {
             <h2 style={{ fontSize: 'clamp(26px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: 'white', marginBottom: '16px', lineHeight: '1.2' }}>
               Ready to Be Our Next<br />Success Story?
             </h2>
-            <p style={{ fontSize: '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '40px', maxWidth: '460px', margin: '0 auto 40px', lineHeight: '1.7' }}>
+            <p style={{ fontSize: isMobile ? '15px' : '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '40px', maxWidth: '460px', margin: '0 auto 40px', lineHeight: '1.7' }}>
               Join thousands of students who trusted Dreamway Education. Book your free consultation today.
             </p>
             <Link

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -299,12 +300,30 @@ const fadeUp = {
 }
 
 export default function CountryDetail() {
+  // ─── Responsive state ───────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const { slug } = useParams()
   const country = countriesData[slug]
 
+  const heroGridColumns = isMobile ? '1fr' : '1fr 1fr'
+  const whyStudyGridColumns = isMobile ? '1fr' : 'repeat(2, 1fr)'
+  const requirementsGridColumns = isMobile ? '1fr' : '1fr 1fr'
+
   if (!country) {
     return (
-      <main style={{ paddingTop: '140px', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+      <main style={{ paddingTop: isMobile ? '120px' : '140px', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px', padding: isMobile ? '120px 20px 60px' : '140px 24px 80px', textAlign: 'center' }}>
         <p style={{ fontSize: '64px' }}>🌍</p>
         <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#111827' }}>Country not found</h2>
         <Link to="/countries" style={{ color: '#23AAA6', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -319,29 +338,30 @@ export default function CountryDetail() {
 
       {/* ── HERO ── */}
       <section style={{
-        paddingTop: '140px', paddingBottom: '80px',
+        paddingTop: isMobile ? '120px' : '140px', 
+        paddingBottom: isMobile ? '50px' : '80px',
         background: 'linear-gradient(160deg, #f0fafa 0%, #eef4fb 60%, #f9fafb 100%)',
         position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: isMobile ? '250px' : '500px', height: isMobile ? '250px' : '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
           {/* Breadcrumb */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }}
-            style={{ marginBottom: '36px' }}>
-            <Link to="/countries" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#6b7280', fontWeight: '500', fontSize: '14px', textDecoration: 'none', transition: 'color 0.2s' }}
+            style={{ marginBottom: isMobile ? '24px' : '36px' }}>
+            <Link to="/countries" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#6b7280', fontWeight: '500', fontSize: isMobile ? '13px' : '14px', textDecoration: 'none', transition: 'color 0.2s' }}
               onMouseEnter={e => e.currentTarget.style.color = '#23AAA6'}
               onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}>
               <FiArrowLeft size={15} /> All Countries
             </Link>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '72px', alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: heroGridColumns, gap: isMobile ? '36px' : '72px', alignItems: 'center' }}>
             {/* Left */}
             <div>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-                  <span style={{ fontSize: '72px', lineHeight: '1' }}>{country.flag}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '16px', marginBottom: '24px' }}>
+                  <span style={{ fontSize: isMobile ? '52px' : '72px', lineHeight: '1' }}>{country.flag}</span>
                   <div>
                     <span style={{ fontSize: '12px', fontWeight: '600', color: '#9ca3af', letterSpacing: '1px', textTransform: 'uppercase' }}>{country.region}</span>
                     <h1 style={{ fontSize: 'clamp(32px,5vw,52px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', lineHeight: '1.1', marginTop: '4px' }}>
@@ -350,7 +370,7 @@ export default function CountryDetail() {
                   </div>
                 </div>
 
-                <p style={{ fontSize: '17px', color: '#6b7280', lineHeight: '1.8', marginBottom: '28px' }}>{country.about}</p>
+                <p style={{ fontSize: isMobile ? '15px' : '17px', color: '#6b7280', lineHeight: '1.8', marginBottom: '28px' }}>{country.about}</p>
 
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '36px' }}>
                   {country.tags.map(tag => (
@@ -368,51 +388,56 @@ export default function CountryDetail() {
 
             {/* Right — Info card */}
             <motion.div
-              initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-              animate={{ y: [0, -10, 0] }}
-              transition={{ y: { duration: 4, repeat: Infinity, ease: 'easeInOut' }, opacity: { duration: 0.7, delay: 0.2 } }}
+              initial={{ opacity: isMobile ? 1 : 0, x: isMobile ? 0 : 40 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.7, delay: 0.2 }}
             >
-              <div style={{ background: 'white', borderRadius: '24px', padding: '36px', boxShadow: '0 24px 64px rgba(38,93,150,0.12)', border: '1px solid rgba(35,170,166,0.1)' }}>
-                <p style={{ fontSize: '12px', fontWeight: '600', color: '#9ca3af', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '20px' }}>Quick Overview</p>
-                {[
-                  { icon: <FiBook size={16} />, label: 'Universities', value: country.universities },
-                  { icon: <FiClock size={16} />, label: 'Program Duration', value: country.duration },
-                  { icon: <FiMapPin size={16} />, label: 'Intake Sessions', value: country.intake },
-                  { icon: <FiGlobe size={16} />, label: 'Region', value: country.region },
-                ].map((item, i) => (
-                  <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 0', borderBottom: i < 3 ? '1px solid #f3f4f6' : 'none' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(35,170,166,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#23AAA6', flexShrink: 0 }}>
-                      {item.icon}
+              <motion.div
+                animate={{ y: isMobile ? [0, -6, 0] : [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <div style={{ background: 'white', borderRadius: '24px', padding: isMobile ? '24px' : '36px', boxShadow: '0 24px 64px rgba(38,93,150,0.12)', border: '1px solid rgba(35,170,166,0.1)' }}>
+                  <p style={{ fontSize: '12px', fontWeight: '600', color: '#9ca3af', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '20px' }}>Quick Overview</p>
+                  {[
+                    { icon: <FiBook size={16} />, label: 'Universities', value: country.universities },
+                    { icon: <FiClock size={16} />, label: 'Program Duration', value: country.duration },
+                    { icon: <FiMapPin size={16} />, label: 'Intake Sessions', value: country.intake },
+                    { icon: <FiGlobe size={16} />, label: 'Region', value: country.region },
+                  ].map((item, i) => (
+                    <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 0', borderBottom: i < 3 ? '1px solid #f3f4f6' : 'none' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(35,170,166,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#23AAA6', flexShrink: 0 }}>
+                        {item.icon}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontSize: '12px', color: '#9ca3af', fontWeight: '500' }}>{item.label}</p>
+                        <p style={{ fontSize: '15px', fontWeight: '700', color: '#111827', marginTop: '2px' }}>{item.value}</p>
+                      </div>
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: '12px', color: '#9ca3af', fontWeight: '500' }}>{item.label}</p>
-                      <p style={{ fontSize: '15px', fontWeight: '700', color: '#111827', marginTop: '2px' }}>{item.value}</p>
-                    </div>
+                  ))}
+                  <div style={{ marginTop: '20px', padding: '16px', borderRadius: '12px', background: 'linear-gradient(135deg, rgba(35,170,166,0.08), rgba(38,93,150,0.06))', border: '1px solid rgba(35,170,166,0.12)' }}>
+                    <p style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6' }}>✦ Free consultation available</p>
+                    <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>Talk to an expert about studying in {country.name}</p>
                   </div>
-                ))}
-                <div style={{ marginTop: '20px', padding: '16px', borderRadius: '12px', background: 'linear-gradient(135deg, rgba(35,170,166,0.08), rgba(38,93,150,0.06))', border: '1px solid rgba(35,170,166,0.12)' }}>
-                  <p style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6' }}>✦ Free consultation available</p>
-                  <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>Talk to an expert about studying in {country.name}</p>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* ── WHY STUDY HERE ── */}
-      <section style={{ padding: '100px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: '48px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: isMobile ? '32px' : '48px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Top Reasons</span>
             <h2 style={{ fontSize: 'clamp(26px,4vw,40px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               Why Study in {country.name}?
             </h2>
           </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: whyStudyGridColumns, gap: isMobile ? '12px' : '16px' }}>
             {country.whyStudy.map((point, i) => (
               <motion.div key={i} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-                style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', padding: '20px', borderRadius: '14px', background: '#f9fafb', border: '1px solid #f3f4f6' }}>
+                style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', padding: isMobile ? '16px' : '20px', borderRadius: '14px', background: '#f9fafb', border: '1px solid #f3f4f6' }}>
                 <div style={{ width: '26px', height: '26px', borderRadius: '50%', background: 'rgba(35,170,166,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
                   <FiCheck size={14} color="#23AAA6" strokeWidth={3} />
                 </div>
@@ -424,23 +449,23 @@ export default function CountryDetail() {
       </section>
 
       {/* ── POPULAR PROGRAMS ── */}
-      <section style={{ padding: '80px 24px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '50px 16px' : '80px 24px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: '40px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: isMobile ? '28px' : '40px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Academic Fields</span>
             <h2 style={{ fontSize: 'clamp(26px,4vw,40px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               Popular Programs
             </h2>
           </motion.div>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: isMobile ? '8px' : '12px', flexWrap: 'wrap' }}>
             {country.programs.map((prog, i) => (
               <motion.div key={prog} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 whileHover={{ y: -3, scale: 1.02 }}
-                style={{ padding: '14px 22px', borderRadius: '12px', background: 'white', border: '1.5px solid #e5e7eb', cursor: 'default', transition: 'all 0.2s ease' }}
+                style={{ padding: isMobile ? '12px 18px' : '14px 22px', borderRadius: '12px', background: 'white', border: '1.5px solid #e5e7eb', cursor: 'default', transition: 'all 0.2s ease' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#23AAA6'; e.currentTarget.style.color = '#23AAA6' }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.color = '#374151' }}
               >
-                <span style={{ fontSize: '14px', fontWeight: '600', color: 'inherit', transition: 'color 0.2s' }}>{prog}</span>
+                <span style={{ fontSize: isMobile ? '13px' : '14px', fontWeight: '600', color: 'inherit', transition: 'color 0.2s' }}>{prog}</span>
               </motion.div>
             ))}
           </div>
@@ -448,27 +473,27 @@ export default function CountryDetail() {
       </section>
 
       {/* ── TOP UNIVERSITIES ── */}
-      <section style={{ padding: '80px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '50px 16px' : '80px 24px', background: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: '40px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: isMobile ? '28px' : '40px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Where Our Students Study</span>
             <h2 style={{ fontSize: 'clamp(26px,4vw,40px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               Top Universities in {country.name}
             </h2>
           </motion.div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '10px' : '12px' }}>
             {country.topUniversities.map((uni, i) => (
               <motion.div key={uni} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 whileHover={{ x: 6 }}
-                style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '20px 24px', borderRadius: '14px', background: '#f9fafb', border: '1px solid #f3f4f6', transition: 'all 0.2s ease', cursor: 'default' }}
+                style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: isMobile ? '16px 18px' : '20px 24px', borderRadius: '14px', background: '#f9fafb', border: '1px solid #f3f4f6', transition: 'all 0.2s ease', cursor: 'default' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(35,170,166,0.3)'; e.currentTarget.style.background = 'rgba(35,170,166,0.03)' }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = '#f3f4f6'; e.currentTarget.style.background = '#f9fafb' }}
               >
                 <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'linear-gradient(135deg, #23AAA6, #265D96)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '14px', fontWeight: '700', flexShrink: 0 }}>
                   {i + 1}
                 </div>
-                <p style={{ fontSize: '15px', fontWeight: '600', color: '#111827' }}>{uni}</p>
-                <FiAward size={16} color="#23AAA6" style={{ marginLeft: 'auto' }} />
+                <p style={{ fontSize: isMobile ? '14px' : '15px', fontWeight: '600', color: '#111827' }}>{uni}</p>
+                <FiAward size={16} color="#23AAA6" style={{ marginLeft: 'auto', flexShrink: 0 }} />
               </motion.div>
             ))}
           </div>
@@ -476,18 +501,18 @@ export default function CountryDetail() {
       </section>
 
       {/* ── REQUIREMENTS ── */}
-      <section style={{ padding: '80px 24px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '50px 16px' : '80px 24px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: requirementsGridColumns, gap: isMobile ? '36px' : '64px', alignItems: 'start' }}>
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
               <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Eligibility</span>
-              <h2 style={{ fontSize: 'clamp(26px,4vw,38px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px', marginBottom: '28px', lineHeight: '1.25' }}>
+              <h2 style={{ fontSize: 'clamp(26px,4vw,38px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px', marginBottom: isMobile ? '20px' : '28px', lineHeight: '1.25' }}>
                 Admission Requirements
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {country.requirements.map((req, i) => (
                   <motion.div key={i} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-                    style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '16px 18px', borderRadius: '12px', background: 'white', border: '1px solid #f3f4f6' }}>
+                    style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: isMobile ? '14px' : '16px 18px', borderRadius: '12px', background: 'white', border: '1px solid #f3f4f6' }}>
                     <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(35,170,166,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
                       <FiShield size={12} color="#23AAA6" />
                     </div>
@@ -499,10 +524,10 @@ export default function CountryDetail() {
 
             {/* CTA card */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-              <div style={{ background: 'linear-gradient(135deg, #23AAA6, #265D96)', borderRadius: '24px', padding: '48px 36px', color: 'white', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ background: 'linear-gradient(135deg, #23AAA6, #265D96)', borderRadius: '24px', padding: isMobile ? '32px 24px' : '48px 36px', color: 'white', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '180px', height: '180px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)', pointerEvents: 'none' }} />
                 <p style={{ fontSize: '13px', fontWeight: '600', color: 'rgba(255,255,255,0.7)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '16px' }}>Ready to Apply?</p>
-                <h3 style={{ fontSize: '28px', fontFamily: "'Fraunces',serif", fontWeight: '600', marginBottom: '16px', lineHeight: '1.3' }}>
+                <h3 style={{ fontSize: isMobile ? '24px' : '28px', fontFamily: "'Fraunces',serif", fontWeight: '600', marginBottom: '16px', lineHeight: '1.3' }}>
                   Start Your Journey to {country.name}
                 </h3>
                 <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.7', marginBottom: '32px' }}>

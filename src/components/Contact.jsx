@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   FiPhone, FiMail, FiMapPin, FiClock,
@@ -77,6 +77,20 @@ const services = [
 ]
 
 export default function Contact() {
+  // ─── Responsive state ───────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const [form, setForm] = useState({
     name: '', email: '', phone: '', country: '', service: '', message: '',
   })
@@ -96,29 +110,33 @@ export default function Contact() {
     }, 1800)
   }
 
+  const contactCardsGrid = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'
+  const formGridColumns = isMobile ? '1fr' : '1.6fr 1fr'
+
   return (
     <main style={{ overflowX: 'hidden' }}>
 
       {/* ── HERO ── */}
       <section style={{
-        paddingTop: '140px', paddingBottom: '80px',
+        paddingTop: isMobile ? '120px' : '140px', 
+        paddingBottom: isMobile ? '50px' : '80px',
         background: 'linear-gradient(160deg, #f0fafa 0%, #eef4fb 60%, #f9fafb 100%)',
         position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: isMobile ? '300px' : '500px', height: isMobile ? '300px' : '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: isMobile ? '200px' : '300px', height: isMobile ? '200px' : '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(35,170,166,0.1)', border: '1px solid rgba(35,170,166,0.2)', borderRadius: '100px', padding: '6px 18px', marginBottom: '24px' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block' }} />
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6' }}>Free Consultation — No Obligations</span>
+              <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: '600', color: '#23AAA6' }}>Free Consultation — No Obligations</span>
             </div>
             <h1 style={{ fontSize: 'clamp(36px, 5vw, 58px)', fontFamily: "'Fraunces', serif", fontWeight: '600', color: '#111827', lineHeight: '1.15', marginBottom: '18px' }}>
               Let's Start Your<br />
               <span style={{ color: '#23AAA6' }}>Study Abroad Journey</span>
             </h1>
-            <p style={{ fontSize: '17px', color: '#6b7280', lineHeight: '1.8', maxWidth: '520px', margin: '0 auto' }}>
+            <p style={{ fontSize: isMobile ? '15px' : '17px', color: '#6b7280', lineHeight: '1.8', maxWidth: '520px', margin: '0 auto' }}>
               Talk to our expert counselors today. We'll assess your profile and guide you to the perfect university — completely free.
             </p>
           </motion.div>
@@ -126,9 +144,9 @@ export default function Contact() {
       </section>
 
       {/* ── CONTACT INFO CARDS ── */}
-      <section style={{ padding: '60px 24px 0', background: 'white' }}>
+      <section style={{ padding: isMobile ? '40px 16px 0' : '60px 24px 0', background: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: contactCardsGrid, gap: isMobile ? '12px' : '16px' }}>
             {contactInfo.map((item, i) => (
               <motion.a
                 key={item.label}
@@ -143,7 +161,7 @@ export default function Contact() {
                 whileHover={{ y: -5 }}
                 style={{
                   display: 'block', textDecoration: 'none',
-                  background: 'white', borderRadius: '18px', padding: '24px',
+                  background: 'white', borderRadius: '18px', padding: isMobile ? '20px' : '24px',
                   border: '1.5px solid #f3f4f6',
                   boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
                   transition: 'all 0.3s ease',
@@ -164,13 +182,13 @@ export default function Contact() {
       </section>
 
       {/* ── FORM + SIDEBAR ── */}
-      <section style={{ padding: '60px 24px 100px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '40px 16px 60px' : '60px 24px 100px', background: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '40px', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: formGridColumns, gap: isMobile ? '32px' : '40px', alignItems: 'start' }}>
 
             {/* ── FORM ── */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-              <div style={{ background: '#f9fafb', borderRadius: '24px', padding: '44px', border: '1px solid #f3f4f6' }}>
+              <div style={{ background: '#f9fafb', borderRadius: '24px', padding: isMobile ? '24px 20px' : '44px', border: '1px solid #f3f4f6' }}>
                 {submitted ? (
                   <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}
                     style={{ textAlign: 'center', padding: '40px 20px' }}>
@@ -194,13 +212,13 @@ export default function Contact() {
                   </motion.div>
                 ) : (
                   <>
-                    <h2 style={{ fontSize: '22px', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginBottom: '6px' }}>
+                    <h2 style={{ fontSize: isMobile ? '20px' : '22px', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginBottom: '6px' }}>
                       Book Your Free Consultation
                     </h2>
-                    <p style={{ fontSize: '14px', color: '#9ca3af', marginBottom: '32px' }}>Fill in the form and we'll get back to you within 24 hours.</p>
+                    <p style={{ fontSize: '14px', color: '#9ca3af', marginBottom: isMobile ? '24px' : '32px' }}>Fill in the form and we'll get back to you within 24 hours.</p>
 
                     <form onSubmit={handleSubmit}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
 
                         {/* Name */}
                         <div>
@@ -227,7 +245,7 @@ export default function Contact() {
                         </div>
                       </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
 
                         {/* Phone */}
                         <div>
@@ -271,12 +289,12 @@ export default function Contact() {
                       </div>
 
                       {/* Message */}
-                      <div style={{ marginBottom: '28px' }}>
+                      <div style={{ marginBottom: isMobile ? '20px' : '28px' }}>
                         <label style={labelStyle}>Your Message</label>
                         <textarea
-                          name="message" value={form.message} onChange={handleChange} rows={4}
+                          name="message" value={form.message} onChange={handleChange} rows={isMobile ? 3 : 4}
                           placeholder="Tell us about your academic background, goals, or any questions..."
-                          style={{ ...inputStyle, resize: 'vertical', minHeight: '110px', lineHeight: '1.6' }}
+                          style={{ ...inputStyle, resize: 'vertical', minHeight: isMobile ? '90px' : '110px', lineHeight: '1.6' }}
                           onFocus={e => e.target.style.borderColor = '#23AAA6'}
                           onBlur={e => e.target.style.borderColor = '#e5e7eb'}
                         />
@@ -316,11 +334,11 @@ export default function Contact() {
             </motion.div>
 
             {/* ── SIDEBAR ── */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '16px' : '20px' }}>
 
               {/* Office Hours */}
               <motion.div custom={1} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-                style={{ background: 'white', borderRadius: '20px', padding: '28px', border: '1.5px solid #f3f4f6' }}>
+                style={{ background: 'white', borderRadius: '20px', padding: isMobile ? '20px' : '28px', border: '1.5px solid #f3f4f6' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
                   <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(35,170,166,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#23AAA6' }}>
                     <FiClock size={18} />
@@ -351,8 +369,8 @@ export default function Contact() {
                 variants={fadeUp}
                 whileHover={{ y: -4, boxShadow: '0 16px 40px rgba(37,211,102,0.25)' }}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: '16px',
-                  background: '#25D366', borderRadius: '20px', padding: '24px',
+                  display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '16px',
+                  background: '#25D366', borderRadius: '20px', padding: isMobile ? '18px' : '24px',
                   textDecoration: 'none', transition: 'all 0.3s ease',
                   boxShadow: '0 8px 24px rgba(37,211,102,0.2)',
                 }}
@@ -368,7 +386,7 @@ export default function Contact() {
 
               {/* Map embed */}
               <motion.div custom={3} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-                style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid #f3f4f6', height: '220px' }}>
+                style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid #f3f4f6', height: isMobile ? '180px' : '220px' }}>
                 <iframe
                   title="Dreamway Education Location"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d435036.23118816045!2d74.00694!3d31.5203696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e58107d9%3A0xc23abe9765e4e55b!2sLahore%2C%20Pakistan!5e0!3m2!1sen!2s!4v1700000000000"
@@ -383,12 +401,12 @@ export default function Contact() {
 
               {/* Socials */}
               <motion.div custom={4} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-                style={{ background: 'white', borderRadius: '20px', padding: '24px', border: '1.5px solid #f3f4f6' }}>
+                style={{ background: 'white', borderRadius: '20px', padding: isMobile ? '20px' : '24px', border: '1.5px solid #f3f4f6' }}>
                 <p style={{ fontSize: '13px', fontWeight: '600', color: '#9ca3af', letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: '16px' }}>Follow Us</p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(4, 1fr)', gap: '10px' }}>
                   {socials.map(s => (
                     <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
-                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', padding: '12px 8px', borderRadius: '12px', background: '#f9fafb', border: '1px solid #f3f4f6', textDecoration: 'none', transition: 'all 0.2s ease', color: s.color }}
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', padding: isMobile ? '10px 6px' : '12px 8px', borderRadius: '12px', background: '#f9fafb', border: '1px solid #f3f4f6', textDecoration: 'none', transition: 'all 0.2s ease', color: s.color }}
                       onMouseEnter={e => { e.currentTarget.style.background = s.color; e.currentTarget.style.color = 'white'; e.currentTarget.style.borderColor = s.color }}
                       onMouseLeave={e => { e.currentTarget.style.background = '#f9fafb'; e.currentTarget.style.color = s.color; e.currentTarget.style.borderColor = '#f3f4f6' }}
                     >

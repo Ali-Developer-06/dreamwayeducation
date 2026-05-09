@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -94,26 +95,46 @@ const fadeUp = {
 }
 
 export default function About() {
+  // ─── Responsive state ───────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const heroGridColumns = isMobile ? '1fr' : '1fr 1fr'
+  const valuesGridColumns = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+  const teamGridColumns = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'
+  const missionGridColumns = isMobile ? '1fr' : '1fr 1fr'
+
   return (
     <main style={{ overflowX: 'hidden' }}>
 
       {/* ── HERO ── */}
       <section style={{
-        paddingTop: '140px', paddingBottom: '90px',
+        paddingTop: isMobile ? '120px' : '140px', 
+        paddingBottom: isMobile ? '50px' : '90px',
         background: 'linear-gradient(160deg, #f0fafa 0%, #eef4fb 60%, #f9fafb 100%)',
         position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: isMobile ? '300px' : '500px', height: isMobile ? '300px' : '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: isMobile ? '200px' : '350px', height: isMobile ? '200px' : '350px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: heroGridColumns, gap: isMobile ? '40px' : '80px', alignItems: 'center' }}>
 
             {/* Left */}
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(35,170,166,0.1)', border: '1px solid rgba(35,170,166,0.2)', borderRadius: '100px', padding: '6px 18px', marginBottom: '24px' }}>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block' }} />
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6' }}>Est. 2014 — Lahore, Pakistan</span>
+                <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: '600', color: '#23AAA6' }}>Est. 2014 — Lahore, Pakistan</span>
               </div>
 
               <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontFamily: "'Fraunces', serif", fontWeight: '600', color: '#111827', lineHeight: '1.15', marginBottom: '20px' }}>
@@ -121,7 +142,7 @@ export default function About() {
                 <span style={{ color: '#23AAA6' }}>Reality.</span>
               </h1>
 
-              <p style={{ fontSize: '17px', color: '#6b7280', lineHeight: '1.8', marginBottom: '36px', maxWidth: '480px' }}>
+              <p style={{ fontSize: isMobile ? '15px' : '17px', color: '#6b7280', lineHeight: '1.8', marginBottom: '36px', maxWidth: '480px' }}>
                 Dreamway Education was founded on a simple belief — every talented Pakistani student deserves access to world-class education, regardless of where they come from.
               </p>
 
@@ -132,24 +153,26 @@ export default function About() {
 
             {/* Right — floating stats card */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
+              initial={{ opacity: isMobile ? 1 : 0, x: isMobile ? 0 : 50 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.7, delay: 0.2 }}
             >
-              <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
-                <div style={{ background: 'white', borderRadius: '24px', padding: '36px', boxShadow: '0 24px 64px rgba(38,93,150,0.13)', border: '1px solid rgba(35,170,166,0.1)' }}>
+              <motion.div animate={{ y: isMobile ? [0, -6, 0] : [0, -12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
+                <div style={{ background: 'white', borderRadius: '24px', padding: isMobile ? '24px' : '36px', boxShadow: '0 24px 64px rgba(38,93,150,0.13)', border: '1px solid rgba(35,170,166,0.1)' }}>
                   <p style={{ fontSize: '13px', fontWeight: '600', color: '#9ca3af', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '24px' }}>Our Impact in Numbers</p>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                     {stats.map((s, i) => (
                       <motion.div key={s.label} initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 + i * 0.1 }}
-                        style={{ padding: '20px', borderRadius: '16px', background: i % 2 === 0 ? 'rgba(35,170,166,0.05)' : 'rgba(38,93,150,0.05)', border: '1px solid', borderColor: i % 2 === 0 ? 'rgba(35,170,166,0.1)' : 'rgba(38,93,150,0.08)' }}>
+                        style={{ padding: isMobile ? '16px' : '20px', borderRadius: '16px', background: i % 2 === 0 ? 'rgba(35,170,166,0.05)' : 'rgba(38,93,150,0.05)', border: '1px solid', borderColor: i % 2 === 0 ? 'rgba(35,170,166,0.1)' : 'rgba(38,93,150,0.08)' }}>
                         <div style={{ color: '#23AAA6', marginBottom: '8px' }}>{s.icon}</div>
-                        <p style={{ fontSize: '26px', fontWeight: '800', color: '#111827', lineHeight: '1' }}>{s.number}</p>
+                        <p style={{ fontSize: isMobile ? '22px' : '26px', fontWeight: '800', color: '#111827', lineHeight: '1' }}>{s.number}</p>
                         <p style={{ fontSize: '12px', color: '#9ca3af', fontWeight: '500', marginTop: '4px' }}>{s.label}</p>
                       </motion.div>
                     ))}
                   </div>
                   {/* Bottom tagline */}
                   <div style={{ marginTop: '20px', padding: '14px 18px', borderRadius: '12px', background: 'linear-gradient(135deg, rgba(35,170,166,0.07), rgba(38,93,150,0.05))', border: '1px solid rgba(35,170,166,0.1)' }}>
-                    <p style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6' }}>✦ Pakistan's Most Trusted Education Consultancy</p>
+                    <p style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', textAlign: 'center' }}>✦ Pakistan's Most Trusted Education Consultancy</p>
                   </div>
                 </div>
               </motion.div>
@@ -160,16 +183,16 @@ export default function About() {
       </section>
 
       {/* ── MISSION ── */}
-      <section style={{ padding: '100px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'white' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: missionGridColumns, gap: isMobile ? '40px' : '80px', alignItems: 'center' }}>
 
             {/* Left — big quote block */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-              <div style={{ position: 'relative', padding: '48px 40px', borderRadius: '24px', background: 'linear-gradient(135deg, #23AAA6, #265D96)', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', padding: isMobile ? '32px 24px' : '48px 40px', borderRadius: '24px', background: 'linear-gradient(135deg, #23AAA6, #265D96)', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-                <p style={{ fontSize: '72px', color: 'rgba(255,255,255,0.15)', fontFamily: 'Georgia, serif', lineHeight: '1', marginBottom: '16px' }}>"</p>
-                <p style={{ fontSize: '22px', fontFamily: "'Fraunces', serif", fontWeight: '400', color: 'white', lineHeight: '1.65', fontStyle: 'italic' }}>
+                <p style={{ fontSize: isMobile ? '48px' : '72px', color: 'rgba(255,255,255,0.15)', fontFamily: 'Georgia, serif', lineHeight: '1', marginBottom: '16px' }}>"</p>
+                <p style={{ fontSize: isMobile ? '18px' : '22px', fontFamily: "'Fraunces', serif", fontWeight: '400', color: 'white', lineHeight: '1.65', fontStyle: 'italic' }}>
                   Our mission is to be the bridge between Pakistani talent and global opportunity — one student at a time.
                 </p>
                 <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.2)' }}>
@@ -198,20 +221,20 @@ export default function About() {
       </section>
 
       {/* ── VALUES ── */}
-      <section style={{ padding: '100px 24px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '64px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>What Drives Us</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,44px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               Our Core Values
             </h2>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: valuesGridColumns, gap: isMobile ? '16px' : '24px' }}>
             {values.map((v, i) => (
               <motion.div key={v.title} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 whileHover={{ y: -6, boxShadow: '0 20px 48px rgba(35,170,166,0.13)' }}
-                style={{ background: 'white', borderRadius: '20px', padding: '32px', border: '1px solid #f3f4f6', transition: 'all 0.3s ease', cursor: 'default' }}>
+                style={{ background: 'white', borderRadius: '20px', padding: isMobile ? '24px 20px' : '32px', border: '1px solid #f3f4f6', transition: 'all 0.3s ease', cursor: 'default' }}>
                 <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'linear-gradient(135deg, rgba(35,170,166,0.12), rgba(38,93,150,0.08))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#23AAA6', marginBottom: '20px' }}>
                   {v.icon}
                 </div>
@@ -224,9 +247,9 @@ export default function About() {
       </section>
 
       {/* ── JOURNEY / TIMELINE ── */}
-      <section style={{ padding: '100px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'white' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: '72px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '72px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Our Story</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,44px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               A Decade of Impact
@@ -234,31 +257,55 @@ export default function About() {
           </motion.div>
 
           <div style={{ position: 'relative' }}>
-            {/* Center line */}
-            <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, #23AAA6, #265D96)', transform: 'translateX(-50%)', opacity: 0.2 }} />
+            {/* Center line — hidden on mobile */}
+            {!isMobile && (
+              <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, #23AAA6, #265D96)', transform: 'translateX(-50%)', opacity: 0.2 }} />
+            )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '32px' : '48px' }}>
               {milestones.map((m, i) => (
                 <motion.div key={m.year} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-                  style={{ display: 'grid', gridTemplateColumns: '1fr 48px 1fr', alignItems: 'center', gap: '24px' }}>
+                  style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: isMobile ? '48px 1fr' : '1fr 48px 1fr', 
+                    alignItems: 'center', 
+                    gap: isMobile ? '16px' : '24px' 
+                  }}>
 
-                  {/* Left side */}
-                  {i % 2 === 0 ? (
+                  {/* Left side — on mobile: center dot first */}
+                  {isMobile ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', zIndex: 1 }}>
+                      <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, #23AAA6, #265D96)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(35,170,166,0.3)' }}>
+                        <p style={{ fontSize: '11px', fontWeight: '800', color: 'white' }}>{m.year}</p>
+                      </div>
+                      {/* Vertical line connecting dots on mobile */}
+                      {i < milestones.length - 1 && (
+                        <div style={{ width: '2px', flex: 1, background: 'linear-gradient(to bottom, #23AAA6, #265D96)', opacity: 0.2, minHeight: '40px' }} />
+                      )}
+                    </div>
+                  ) : i % 2 === 0 ? (
                     <div style={{ textAlign: 'right', padding: '24px 28px', borderRadius: '16px', background: '#f9fafb', border: '1px solid #f3f4f6' }}>
                       <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827', marginBottom: '8px' }}>{m.title}</h3>
                       <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.7' }}>{m.desc}</p>
                     </div>
                   ) : <div />}
 
-                  {/* Center dot */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', zIndex: 1 }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, #23AAA6, #265D96)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(35,170,166,0.3)' }}>
-                      <p style={{ fontSize: '11px', fontWeight: '800', color: 'white' }}>{m.year}</p>
+                  {/* Center dot — on desktop */}
+                  {!isMobile && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', zIndex: 1 }}>
+                      <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, #23AAA6, #265D96)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(35,170,166,0.3)' }}>
+                        <p style={{ fontSize: '11px', fontWeight: '800', color: 'white' }}>{m.year}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  {/* Right side */}
-                  {i % 2 !== 0 ? (
+                  {/* Right side — on mobile: content next to dot */}
+                  {isMobile ? (
+                    <div style={{ padding: '20px', borderRadius: '16px', background: '#f9fafb', border: '1px solid #f3f4f6' }}>
+                      <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827', marginBottom: '8px' }}>{m.title}</h3>
+                      <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.7' }}>{m.desc}</p>
+                    </div>
+                  ) : i % 2 !== 0 ? (
                     <div style={{ padding: '24px 28px', borderRadius: '16px', background: '#f9fafb', border: '1px solid #f3f4f6' }}>
                       <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827', marginBottom: '8px' }}>{m.title}</h3>
                       <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.7' }}>{m.desc}</p>
@@ -273,20 +320,20 @@ export default function About() {
       </section>
 
       {/* ── TEAM ── */}
-      <section style={{ padding: '100px 24px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '64px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>The People Behind Dreamway</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,44px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               Meet Our Expert Team
             </h2>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: teamGridColumns, gap: isMobile ? '16px' : '20px' }}>
             {team.map((member, i) => (
               <motion.div key={member.name} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 whileHover={{ y: -6, boxShadow: '0 20px 48px rgba(35,170,166,0.13)' }}
-                style={{ background: 'white', borderRadius: '20px', padding: '32px 24px', border: '1px solid #f3f4f6', textAlign: 'center', transition: 'all 0.3s ease', cursor: 'default' }}>
+                style={{ background: 'white', borderRadius: '20px', padding: isMobile ? '28px 20px' : '32px 24px', border: '1px solid #f3f4f6', textAlign: 'center', transition: 'all 0.3s ease', cursor: 'default' }}>
                 <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'linear-gradient(135deg, #23AAA6, #265D96)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: '30px' }}>
                   {member.emoji}
                 </div>
@@ -302,18 +349,18 @@ export default function About() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: '80px 24px 100px' }}>
+      <section style={{ padding: isMobile ? '40px 16px' : '80px 24px 100px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-            style={{ background: 'linear-gradient(135deg, #23AAA6, #265D96)', borderRadius: '28px', padding: '72px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '240px', height: '240px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
+            style={{ background: 'linear-gradient(135deg, #23AAA6, #265D96)', borderRadius: '28px', padding: isMobile ? '48px 24px' : '72px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: isMobile ? '200px' : '300px', height: isMobile ? '200px' : '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: isMobile ? '160px' : '240px', height: isMobile ? '160px' : '240px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
 
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
               <h2 style={{ fontSize: 'clamp(26px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: 'white', marginBottom: '16px', lineHeight: '1.2' }}>
                 Let's Write Your Success Story Together
               </h2>
-              <p style={{ fontSize: '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '40px', maxWidth: '480px', margin: '0 auto 40px', lineHeight: '1.7' }}>
+              <p style={{ fontSize: isMobile ? '15px' : '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '40px', maxWidth: '480px', margin: '0 auto 40px', lineHeight: '1.7' }}>
                 Join 2,500+ students who trusted Dreamway Education to guide them to their dream university.
               </p>
               <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>

@@ -9,6 +9,7 @@ import NotFound from './components/NotFound'
 import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import Services from './components/Service'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/countries" element={<Countries />} />
+        <Route path="/services" element={<Services />} />
         <Route path="/countries/:slug" element={<CountryDetail />} />
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/about" element={<About />} />

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FiArrowRight, FiMail, FiPhone, FiMapPin, FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi'
@@ -40,15 +41,39 @@ const socials = [
 ]
 
 export default function Footer() {
+  // ─── Responsive state ───────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const footerGridColumns = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : '2fr 1fr 1fr 1fr'
+
   return (
     <footer style={{ background: '#0d1117', color: 'white', overflow: 'hidden' }}>
 
       {/* ── CTA STRIP ── */}
       <div style={{
         background: 'linear-gradient(135deg, #23AAA6, #265D96)',
-        padding: '48px 24px',
+        padding: isMobile ? '36px 20px' : '48px 24px',
       }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap' }}>
+        <div style={{ 
+          maxWidth: '1200px', margin: '0 auto', 
+          display: 'flex', 
+          alignItems: isMobile ? 'flex-start' : 'center', 
+          justifyContent: 'space-between', 
+          gap: isMobile ? '20px' : '24px', 
+          flexWrap: 'wrap',
+          flexDirection: isMobile ? 'column' : 'row',
+        }}>
           <div>
             <h3 style={{ fontSize: 'clamp(20px,3vw,28px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: 'white', marginBottom: '6px' }}>
               Ready to Study Abroad?
@@ -57,7 +82,7 @@ export default function Footer() {
               Book your free consultation today — no fees, no obligations.
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', width: isMobile ? '100%' : 'auto' }}>
             <Link to="/contact" style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '13px 26px', borderRadius: '12px',
@@ -65,6 +90,8 @@ export default function Footer() {
               fontWeight: '700', fontSize: '14px', textDecoration: 'none',
               boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
               transition: 'all 0.2s ease',
+              flex: isMobile ? 1 : 'none',
+              justifyContent: 'center',
             }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
@@ -77,6 +104,8 @@ export default function Footer() {
               background: '#25D366', color: 'white',
               fontWeight: '700', fontSize: '14px', textDecoration: 'none',
               transition: 'all 0.2s ease',
+              flex: isMobile ? 1 : 'none',
+              justifyContent: 'center',
             }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
@@ -88,9 +117,9 @@ export default function Footer() {
       </div>
 
       {/* ── MAIN FOOTER ── */}
-      <div style={{ padding: '72px 24px 48px' }}>
+      <div style={{ padding: isMobile ? '48px 20px 36px' : '72px 24px 48px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '48px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: footerGridColumns, gap: isMobile ? '36px' : isTablet ? '48px 32px' : '48px' }}>
 
             {/* Brand column */}
             <div>
@@ -169,7 +198,7 @@ export default function Footer() {
                     onMouseEnter={e => e.currentTarget.style.color = '#23AAA6'}
                     onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
                   >
-                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block', opacity: 0.6 }} />
+                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block', opacity: 0.6, flexShrink: 0 }} />
                     {link.label}
                   </Link>
                 ))}
@@ -188,7 +217,7 @@ export default function Footer() {
                     onMouseEnter={e => e.currentTarget.style.color = '#23AAA6'}
                     onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
                   >
-                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block', opacity: 0.6 }} />
+                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block', opacity: 0.6, flexShrink: 0 }} />
                     {c.name}
                   </Link>
                 ))}
@@ -207,7 +236,7 @@ export default function Footer() {
                     onMouseEnter={e => e.currentTarget.style.color = '#23AAA6'}
                     onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
                   >
-                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block', opacity: 0.6 }} />
+                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block', opacity: 0.6, flexShrink: 0 }} />
                     {s}
                   </Link>
                 ))}
@@ -219,8 +248,16 @@ export default function Footer() {
       </div>
 
       {/* ── BOTTOM BAR ── */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '20px 24px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '16px 20px' : '20px 24px' }}>
+        <div style={{ 
+          maxWidth: '1200px', margin: '0 auto', 
+          display: 'flex', 
+          alignItems: isMobile ? 'flex-start' : 'center', 
+          justifyContent: 'space-between', 
+          gap: isMobile ? '8px' : '16px', 
+          flexWrap: 'wrap',
+          flexDirection: isMobile ? 'column' : 'row',
+        }}>
           <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.3)' }}>
             © {new Date().getFullYear()} Dreamway Education. All rights reserved.
           </p>

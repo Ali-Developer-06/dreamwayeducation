@@ -171,10 +171,33 @@ function TestimonialCarousel() {
     return () => clearInterval(interval)
   }, [emblaApi])
 
+  // ─── Responsive styles ──────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const cardFlexBasis = isMobile ? 'calc(85% - 12px)' : isTablet ? 'calc(50% - 12px)' : 'calc(33.333% - 16px)'
+
   return (
     <div>
       {/* Header row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: isMobile ? 'flex-start' : 'flex-end', 
+        marginBottom: isMobile ? '24px' : '40px',
+        flexDirection: isMobile ? 'column' : 'row',
+        gap: isMobile ? '16px' : '0',
+      }}>
         <div>
           <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Student Stories</span>
           <h2 style={{ fontSize: 'clamp(28px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
@@ -182,47 +205,49 @@ function TestimonialCarousel() {
           </h2>
         </div>
         {/* Nav buttons */}
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            onClick={scrollPrev}
-            style={{
-              width: '46px', height: '46px', borderRadius: '50%', border: '1.5px solid #e5e7eb',
-              background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#265D96', transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#23AAA6'; e.currentTarget.style.borderColor = '#23AAA6'; e.currentTarget.style.color = 'white' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.color = '#265D96' }}
-          >
-            <FiChevronLeft size={20} />
-          </button>
-          <button
-            onClick={scrollNext}
-            style={{
-              width: '46px', height: '46px', borderRadius: '50%', border: '1.5px solid #e5e7eb',
-              background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#265D96', transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#23AAA6'; e.currentTarget.style.borderColor = '#23AAA6'; e.currentTarget.style.color = 'white' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.color = '#265D96' }}
-          >
-            <FiChevronRight size={20} />
-          </button>
-        </div>
+        {!isMobile && (
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              onClick={scrollPrev}
+              style={{
+                width: '46px', height: '46px', borderRadius: '50%', border: '1.5px solid #e5e7eb',
+                background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#265D96', transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#23AAA6'; e.currentTarget.style.borderColor = '#23AAA6'; e.currentTarget.style.color = 'white' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.color = '#265D96' }}
+            >
+              <FiChevronLeft size={20} />
+            </button>
+            <button
+              onClick={scrollNext}
+              style={{
+                width: '46px', height: '46px', borderRadius: '50%', border: '1.5px solid #e5e7eb',
+                background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#265D96', transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#23AAA6'; e.currentTarget.style.borderColor = '#23AAA6'; e.currentTarget.style.color = 'white' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.color = '#265D96' }}
+            >
+              <FiChevronRight size={20} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Embla viewport */}
       <div ref={emblaRef} style={{ overflow: 'hidden' }}>
-        <div style={{ display: 'flex', gap: '24px' }}>
+        <div style={{ display: 'flex', gap: isMobile ? '12px' : '24px' }}>
           {testimonials.map((t, i) => (
             <div
               key={i}
               style={{
-                flex: '0 0 calc(33.333% - 16px)',
+                flex: `0 0 ${cardFlexBasis}`,
                 minWidth: '0',
               }}
             >
               <div style={{
-                background: 'white', borderRadius: '20px', padding: '36px 32px',
+                background: 'white', borderRadius: '20px', padding: isMobile ? '24px 20px' : '36px 32px',
                 border: '1px solid #f3f4f6',
                 boxShadow: '0 4px 24px rgba(38,93,150,0.07)',
                 height: '100%', display: 'flex', flexDirection: 'column',
@@ -232,7 +257,7 @@ function TestimonialCarousel() {
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(38,93,150,0.07)'; e.currentTarget.style.borderColor = '#f3f4f6' }}
               >
                 {/* Quote mark */}
-                <div style={{ fontSize: '56px', lineHeight: '1', color: '#23AAA6', opacity: 0.15, fontFamily: 'Georgia, serif', marginBottom: '8px', marginTop: '-8px' }}>"</div>
+                <div style={{ fontSize: isMobile ? '40px' : '56px', lineHeight: '1', color: '#23AAA6', opacity: 0.15, fontFamily: 'Georgia, serif', marginBottom: '8px', marginTop: '-8px' }}>"</div>
 
                 {/* Stars */}
                 <div style={{ display: 'flex', gap: '3px', marginBottom: '16px' }}>
@@ -241,7 +266,7 @@ function TestimonialCarousel() {
                   ))}
                 </div>
 
-                <p style={{ fontSize: '15px', color: '#374151', lineHeight: '1.8', flex: 1, fontStyle: 'italic' }}>
+                <p style={{ fontSize: isMobile ? '14px' : '15px', color: '#374151', lineHeight: '1.8', flex: 1, fontStyle: 'italic' }}>
                   {t.text}
                 </p>
 
@@ -299,6 +324,27 @@ const fadeUp = {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function Home() {
+  // ─── Responsive state ───────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const heroGridColumns = isMobile ? '1fr' : '1fr 1fr'
+  const servicesGridColumns = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+  const countriesGridColumns = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+  const stepsGridColumns = isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'
+  const whyUsGridColumns = isMobile ? '1fr' : '1fr 1fr'
+  const statsGridColumns = isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'
+
   return (
     <main style={{ overflowX: 'hidden' }}>
 
@@ -307,22 +353,23 @@ export default function Home() {
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f0fafa 0%, #eef4fb 50%, #faf8f6 100%)',
         display: 'flex', alignItems: 'center',
-        paddingTop: '100px', paddingBottom: '60px',
+        paddingTop: isMobile ? '120px' : '100px', 
+        paddingBottom: isMobile ? '40px' : '60px',
         position: 'relative', overflow: 'hidden',
       }}>
         {/* bg blobs */}
-        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-80px', left: '-80px', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: isMobile ? '300px' : '600px', height: isMobile ? '300px' : '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(35,170,166,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-80px', left: '-80px', width: isMobile ? '200px' : '400px', height: isMobile ? '200px' : '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(38,93,150,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', width: '100%' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: heroGridColumns, gap: isMobile ? '40px' : '60px', alignItems: 'center' }}>
 
             {/* Left */}
             <div>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(35,170,166,0.1)', border: '1px solid rgba(35,170,166,0.25)', borderRadius: '100px', padding: '6px 16px', marginBottom: '24px' }}>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#23AAA6', display: 'inline-block' }} />
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '0.5px' }}>Pakistan's Premier Education Consultancy</span>
+                <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '0.5px' }}>Pakistan's Premier Education Consultancy</span>
               </motion.div>
 
               <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
@@ -333,7 +380,7 @@ export default function Home() {
               </motion.h1>
 
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-                style={{ fontSize: '17px', color: '#6b7280', lineHeight: '1.75', marginBottom: '36px', maxWidth: '480px' }}>
+                style={{ fontSize: isMobile ? '16px' : '17px', color: '#6b7280', lineHeight: '1.75', marginBottom: '36px', maxWidth: '480px' }}>
                 We've placed 2,500+ students in top universities across 9 countries. Let our expert counselors guide you from application to arrival.
               </motion.p>
 
@@ -345,6 +392,8 @@ export default function Home() {
                   background: 'linear-gradient(135deg, #23AAA6, #265D96)',
                   color: 'white', fontWeight: '600', fontSize: '15px', textDecoration: 'none',
                   boxShadow: '0 8px 24px rgba(35,170,166,0.35)', transition: 'all 0.2s ease',
+                  width: isMobile ? '100%' : 'auto',
+                  justifyContent: 'center',
                 }}>
                   Get Free Consultation <FiArrowRight size={18} />
                 </Link>
@@ -353,6 +402,8 @@ export default function Home() {
                   padding: '14px 28px', borderRadius: '12px',
                   background: 'white', color: '#265D96', fontWeight: '600', fontSize: '15px',
                   textDecoration: 'none', border: '1.5px solid #265D96', transition: 'all 0.2s ease',
+                  width: isMobile ? '100%' : 'auto',
+                  justifyContent: 'center',
                 }}>
                   Explore Countries
                 </Link>
@@ -374,6 +425,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
+              style={{ display: isMobile ? 'none' : 'block' }}
             >
               {/* Infinite float animation wrapper */}
               <motion.div
@@ -468,9 +520,9 @@ export default function Home() {
       </section>
 
       {/* ── STATS ── */}
-      <section style={{ background: 'linear-gradient(135deg, #23AAA6, #265D96)', padding: '60px 24px' }}>
+      <section style={{ background: 'linear-gradient(135deg, #23AAA6, #265D96)', padding: isMobile ? '40px 24px' : '60px 24px' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: statsGridColumns, gap: isMobile ? '20px' : '24px', rowGap: isMobile ? '32px' : '24px' }}>
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -489,10 +541,10 @@ export default function Home() {
       </section>
 
       {/* ── SERVICES ── */}
-      <section style={{ padding: '100px 24px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-            style={{ textAlign: 'center', marginBottom: '60px' }}>
+            style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '60px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>What We Offer</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px', lineHeight: '1.2' }}>
               Everything You Need,<br />Under One Roof
@@ -501,11 +553,11 @@ export default function Home() {
               From your first free consultation to your first day at university — we're with you every step.
             </p>
           </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: servicesGridColumns, gap: isMobile ? '16px' : '24px' }}>
             {services.map((s, i) => (
               <motion.div key={s.title} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 whileHover={{ y: -6, boxShadow: '0 20px 48px rgba(35,170,166,0.15)' }}
-                style={{ background: 'white', borderRadius: '16px', padding: '32px', border: '1px solid #f3f4f6', transition: 'all 0.3s ease', cursor: 'default' }}>
+                style={{ background: 'white', borderRadius: '16px', padding: isMobile ? '24px 20px' : '32px', border: '1px solid #f3f4f6', transition: 'all 0.3s ease', cursor: 'default' }}>
                 <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'linear-gradient(135deg, rgba(35,170,166,0.12), rgba(38,93,150,0.08))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#23AAA6', marginBottom: '20px' }}>
                   {s.icon}
                 </div>
@@ -518,25 +570,25 @@ export default function Home() {
       </section>
 
       {/* ── COUNTRIES ── */}
-      <section style={{ padding: '100px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-            style={{ textAlign: 'center', marginBottom: '60px' }}>
+            style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '60px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Study Destinations</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               9 Countries, Infinite Possibilities
             </h2>
           </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: countriesGridColumns, gap: isMobile ? '12px' : '20px' }}>
             {countries.map((c, i) => (
               <motion.div key={c.name} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} whileHover={{ y: -4 }}>
                 <Link to={`/countries/${c.name.toLowerCase().replace(/\s+/g, '-')}`} style={{ textDecoration: 'none' }}>
                   <div
-                    style={{ background: 'white', borderRadius: '16px', padding: '28px', border: '1px solid #e5e7eb', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', gap: '16px' }}
+                    style={{ background: 'white', borderRadius: '16px', padding: isMobile ? '20px' : '28px', border: '1px solid #e5e7eb', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', gap: '16px' }}
                     onMouseEnter={e => { e.currentTarget.style.borderColor = '#23AAA6'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(35,170,166,0.12)' }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
                   >
-                    <span style={{ fontSize: '40px', lineHeight: '1' }}>{c.flag}</span>
+                    <span style={{ fontSize: isMobile ? '32px' : '40px', lineHeight: '1' }}>{c.flag}</span>
                     <div style={{ flex: 1 }}>
                       <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#111827' }}>{c.name}</h3>
                       <p style={{ fontSize: '13px', color: '#9ca3af', marginTop: '2px' }}>{c.universities} universities</p>
@@ -558,15 +610,15 @@ export default function Home() {
       </section>
 
       {/* ── PROCESS ── */}
-      <section style={{ padding: '100px 24px', background: '#f9fafb' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: '#f9fafb' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: '70px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '70px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>How It Works</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               4 Simple Steps to Your Dream University
             </h2>
           </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: stepsGridColumns, gap: isMobile ? '16px' : '24px' }}>
             {steps.map((s, i) => (
               <motion.div
                 key={s.num}
@@ -577,7 +629,7 @@ export default function Home() {
                 variants={fadeUp}
                 whileHover={{ y: -8, boxShadow: '0 20px 48px rgba(35,170,166,0.15)', borderColor: 'rgba(35,170,166,0.3)' }}
                 style={{
-                  background: 'white', borderRadius: '16px', padding: '32px 24px',
+                  background: 'white', borderRadius: '16px', padding: isMobile ? '24px 20px' : '32px 24px',
                   border: '1px solid #f3f4f6', textAlign: 'center', cursor: 'default',
                   transition: 'all 0.3s ease',
                 }}
@@ -594,9 +646,9 @@ export default function Home() {
       </section>
 
       {/* ── WHY US ── */}
-      <section style={{ padding: '100px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'white' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: whyUsGridColumns, gap: isMobile ? '40px' : '80px', alignItems: 'center' }}>
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
               <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>Why Choose Us</span>
               <h2 style={{ fontSize: 'clamp(28px,4vw,40px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px', marginBottom: '24px', lineHeight: '1.2' }}>
@@ -625,16 +677,16 @@ export default function Home() {
       </section>
 
       {/* ── TESTIMONIALS CAROUSEL ── */}
-      <section style={{ padding: '100px 24px', background: 'linear-gradient(135deg, #f0fafa, #eef4fb)' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'linear-gradient(135deg, #f0fafa, #eef4fb)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <TestimonialCarousel />
         </div>
       </section>
 
       {/* ── FAQ ── */}
-      <section style={{ padding: '100px 24px', background: 'white' }}>
+      <section style={{ padding: isMobile ? '60px 16px' : '100px 24px', background: 'white' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '60px' }}>
             <span style={{ fontSize: '13px', fontWeight: '600', color: '#23AAA6', letterSpacing: '1px', textTransform: 'uppercase' }}>FAQ</span>
             <h2 style={{ fontSize: 'clamp(28px,4vw,42px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: '#111827', marginTop: '10px' }}>
               Frequently Asked Questions
@@ -647,15 +699,15 @@ export default function Home() {
       </section>
 
       {/* ── CTA BANNER ── */}
-      <section style={{ padding: '80px 24px' }}>
+      <section style={{ padding: isMobile ? '40px 16px' : '80px 24px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-            style={{ background: 'linear-gradient(135deg, #23AAA6 0%, #265D96 100%)', borderRadius: '24px', padding: '64px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            style={{ background: 'linear-gradient(135deg, #23AAA6 0%, #265D96 100%)', borderRadius: '24px', padding: isMobile ? '40px 24px' : '64px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: '-60px', right: '-60px', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)', pointerEvents: 'none' }} />
             <h2 style={{ fontSize: 'clamp(26px,4vw,40px)', fontFamily: "'Fraunces',serif", fontWeight: '600', color: 'white', marginBottom: '16px' }}>
               Ready to Start Your Study Abroad Journey?
             </h2>
-            <p style={{ fontSize: '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '36px', maxWidth: '520px', margin: '0 auto 36px' }}>
+            <p style={{ fontSize: isMobile ? '15px' : '17px', color: 'rgba(255,255,255,0.8)', marginBottom: '36px', maxWidth: '520px', margin: '0 auto 36px' }}>
               Book your free consultation today. No fees, no obligations — just expert guidance.
             </p>
             <Link to="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 32px', borderRadius: '12px', background: 'white', color: '#23AAA6', fontWeight: '700', fontSize: '15px', textDecoration: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.15)' }}>
