@@ -46,7 +46,7 @@ const steps = [
 ]
 
 const whyUs = [
-  'Certified education counselors with 10+ years experience',
+  'Certified education counselors with 3+ years experience',
   '98% student visa approval rate',
   'Partnerships with 200+ universities worldwide',
   'End-to-end support from consultation to departure',
@@ -381,7 +381,7 @@ export default function Home() {
 
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
                 style={{ fontSize: isMobile ? '16px' : '17px', color: '#6b7280', lineHeight: '1.75', marginBottom: '36px', maxWidth: '480px' }}>
-                We've placed 2,500+ students in top universities across 9 countries. Let our expert counselors guide you from application to arrival.
+                We've placed 2,500+ students in top universities across 15 countries. Let our expert counselors guide you from application to arrival.
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
@@ -411,7 +411,7 @@ export default function Home() {
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
                 style={{ display: 'flex', gap: '24px', marginTop: '40px', flexWrap: 'wrap' }}>
-                {['Free Consultation', '98% Visa Rate', '10+ Years'].map((badge) => (
+                {['Free Consultation', '98% Visa Rate', '3+ Years'].map((badge) => (
                   <div key={badge} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <FiCheck size={14} color="#23AAA6" strokeWidth={3} />
                     <span style={{ fontSize: '13px', color: '#6b7280', fontWeight: '500' }}>{badge}</span>
@@ -655,7 +655,7 @@ export default function Home() {
                 We're Not Just Consultants. We're Your Partners.
               </h2>
               <p style={{ fontSize: '16px', color: '#6b7280', lineHeight: '1.75', marginBottom: '36px' }}>
-                With 10+ years of experience and thousands of success stories, Dreamway Education is the most trusted name for study abroad in Pakistan.
+                With 3+ years of experience and thousands of success stories, Dreamway Education is the most trusted name for study abroad in Pakistan.
               </p>
               <Link to="/about" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 26px', borderRadius: '12px', background: 'linear-gradient(135deg, #23AAA6, #265D96)', color: 'white', fontWeight: '600', fontSize: '15px', textDecoration: 'none', boxShadow: '0 8px 24px rgba(35,170,166,0.3)' }}>
                 Learn About Us <FiArrowRight size={17} />

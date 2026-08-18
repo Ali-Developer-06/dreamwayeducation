@@ -10,7 +10,7 @@ const stats = [
   { number: '2,500+', label: 'Students Placed', icon: <FiUsers size={20} /> },
   { number: '15+', label: 'Countries', icon: <FiGlobe size={20} /> },
   { number: '98%', label: 'Visa Success Rate', icon: <FiShield size={20} /> },
-  { number: '10+', label: 'Years Experience', icon: <FiAward size={20} /> },
+  { number: '3+', label: 'Years Experience', icon: <FiAward size={20} /> },
 ]
 
 const values = [
@@ -48,7 +48,7 @@ const values = [
 
 const team = [
   {
-    name: 'Muhammad Ali',
+    name: 'AmanUllah',
     role: 'Founder & CEO',
     exp: '12 Years Experience',
     emoji: '👨‍💼',
@@ -193,10 +193,10 @@ export default function About() {
                 <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
                 <p style={{ fontSize: isMobile ? '48px' : '72px', color: 'rgba(255,255,255,0.15)', fontFamily: 'Georgia, serif', lineHeight: '1', marginBottom: '16px' }}>"</p>
                 <p style={{ fontSize: isMobile ? '18px' : '22px', fontFamily: "'Fraunces', serif", fontWeight: '400', color: 'white', lineHeight: '1.65', fontStyle: 'italic' }}>
-                  Our mission is to be the bridge between Pakistani talent and global opportunity — one student at a time.
+                  Our mission is to be the bridge between Pakistani talent and global opportunity one student at a time.
                 </p>
                 <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.2)' }}>
-                  <p style={{ fontSize: '14px', fontWeight: '700', color: 'rgba(255,255,255,0.9)' }}>Muhammad Ali</p>
+                  <p style={{ fontSize: '14px', fontWeight: '700', color: 'rgba(255,255,255,0.9)' }}>AmanUllah</p>
                   <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginTop: '2px' }}>Founder & CEO, Dreamway Education</p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ export default function About() {
                 Democratizing Access to World-Class Education
               </h2>
               <p style={{ fontSize: '16px', color: '#6b7280', lineHeight: '1.8', marginBottom: '16px' }}>
-                When Dreamway Education was founded in Lahore in 2014, the goal was simple: remove the barriers that stop talented students from accessing the world's best universities.
+                When Dreamway Education was founded in Lahore in 2024, the goal was simple: remove the barriers that stop talented students from accessing the world's best universities.
               </p>
               <p style={{ fontSize: '16px', color: '#6b7280', lineHeight: '1.8' }}>
                 Today, with 2,500+ students successfully placed across 15 countries, we remain as committed to that mission as ever. Every student we serve gets the same level of dedication, transparency, and care.

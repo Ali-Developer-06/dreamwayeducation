@@ -407,7 +407,7 @@ export default function Services() {
               { value: '2,500+', label: 'Students Placed', desc: 'Successfully guided to top universities worldwide' },
               { value: '98%', label: 'Visa Success Rate', desc: 'One of the highest approval rates in Pakistan' },
               { value: '15+', label: 'Countries', desc: 'Destinations across Asia, Europe & Pacific' },
-              { value: '10+', label: 'Years Experience', desc: 'A decade of trusted education consultancy' },
+              { value: '3+', label: 'Years Experience', desc: 'A decade of trusted education consultancy' },
             ].map((item, i) => (
               <motion.div
                 key={item.label}

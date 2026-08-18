@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   FiPhone, FiMail, FiMapPin, FiClock,
-  FiSend, FiCheck, FiInstagram, FiFacebook, FiYoutube
+  FiSend, FiCheck, FiYoutube
 } from 'react-icons/fi'
 import { FaWhatsapp } from 'react-icons/fa'
+import { AiFillFacebook, AiFillTikTok } from 'react-icons/ai'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -18,29 +19,29 @@ const contactInfo = [
   {
     icon: <FaWhatsapp size={20} />,
     label: 'WhatsApp',
-    value: '+92 300 000 0000',
+    value: '03013037141',
     sub: 'Chat with us anytime',
     color: '#25D366',
     bg: 'rgba(37,211,102,0.08)',
-    href: 'https://wa.me/923000000000',
+    href: 'https://wa.me/923013037141',
   },
   {
     icon: <FiPhone size={20} />,
     label: 'Phone',
-    value: '+92 300 000 0000',
+    value: '03413371475',
     sub: 'Mon–Sat, 9am–7pm',
     color: '#23AAA6',
     bg: 'rgba(35,170,166,0.08)',
-    href: 'tel:+923000000000',
+    href: 'tel:+923413371475',
   },
   {
     icon: <FiMail size={20} />,
     label: 'Email',
-    value: 'info@dreamwayedu.com',
+    value: 'dreamwaylahore@gmail.com',
     sub: 'We reply within 24 hours',
     color: '#265D96',
     bg: 'rgba(38,93,150,0.08)',
-    href: 'mailto:info@dreamwayedu.com',
+    href: 'mailto:dreamwaylahore@gmail.com',
   },
   {
     icon: <FiMapPin size={20} />,
@@ -49,15 +50,14 @@ const contactInfo = [
     sub: 'Visit us for in-person consultation',
     color: '#C97E5E',
     bg: 'rgba(201,126,94,0.08)',
-    href: 'https://maps.google.com',
+    href: 'https://maps.app.goo.gl/QncaQACsAEZwCiRd8',
   },
 ]
 
 const socials = [
-  { icon: <FiInstagram size={20} />, label: 'Instagram', href: '#', color: '#E1306C' },
-  { icon: <FiFacebook size={20} />, label: 'Facebook', href: '#', color: '#1877F2' },
-  { icon: <FaWhatsapp size={20} />, label: 'WhatsApp', href: '#', color: '#25D366' },
-  { icon: <FiYoutube size={20} />, label: 'YouTube', href: '#', color: '#FF0000' },
+  { icon: <AiFillTikTok size={20} />, label: 'TikTok', href: 'https://www.tiktok.com/@dreamway46?_r=1&_t=ZS-98otuHN2mN2', color: '#FE2C55 ' },
+  { icon: <AiFillFacebook size={20} />, label: 'Facebook', href: ' https://www.facebook.com/share/1Q7uM1457x', color: '#1877F2' },
+  { icon: <FaWhatsapp size={20} />, label: 'WhatsApp', href: 'https://wa.me/923013037141', color: '#25D366' },
 ]
 
 const countries = [
@@ -202,7 +202,7 @@ export default function Contact() {
                       Thank you for reaching out. One of our counselors will contact you within 24 hours.
                     </p>
                     
-                    <a href="https://wa.me/923000000000"
+                    <a href="https://wa.me/923013037141"
                       target="_blank"
                       rel="noreferrer"
                       style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '12px', background: '#25D366', color: 'white', fontWeight: '600', fontSize: '14px', textDecoration: 'none' }}
@@ -238,7 +238,7 @@ export default function Contact() {
                           <input
                             name="email" type="email" value={form.email} onChange={handleChange} required
                             placeholder="you@example.com"
-                            style={inputStyle}
+                            style={{padding: '10px', width: '100%'}}
                             onFocus={e => e.target.style.borderColor = '#23AAA6'}
                             onBlur={e => e.target.style.borderColor = '#e5e7eb'}
                           />
@@ -359,7 +359,7 @@ export default function Contact() {
 
               {/* WhatsApp CTA */}
               <motion.a
-                href="https://wa.me/923000000000"
+                href="https://wa.me/923013037141"
                 target="_blank"
                 rel="noreferrer"
                 custom={2}
@@ -389,7 +389,7 @@ export default function Contact() {
                 style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid #f3f4f6', height: isMobile ? '180px' : '220px' }}>
                 <iframe
                   title="Dreamway Education Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d435036.23118816045!2d74.00694!3d31.5203696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e58107d9%3A0xc23abe9765e4e55b!2sLahore%2C%20Pakistan!5e0!3m2!1sen!2s!4v1700000000000"
+                  src="https://maps.app.goo.gl/QncaQACsAEZwCiRd8"
                   width="100%"
                   height="100%"
                   style={{ border: 0, display: 'block' }}
@@ -416,12 +416,10 @@ export default function Contact() {
                   ))}
                 </div>
               </motion.div>
-
             </div>
           </div>
         </div>
       </section>
-
     </main>
   )
 }

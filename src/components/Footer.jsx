@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FiArrowRight, FiMail, FiPhone, FiMapPin, FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi'
+import { FiArrowRight, FiMail, FiPhone, FiMapPin, FiFacebook, FiYoutube } from 'react-icons/fi'
 import { FaWhatsapp } from 'react-icons/fa'
+import { AiFillTikTok } from 'react-icons/ai'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -34,10 +35,9 @@ const services = [
 ]
 
 const socials = [
-  { icon: <FiInstagram size={18} />, href: '#', label: 'Instagram', color: '#E1306C' },
-  { icon: <FiFacebook size={18} />, href: '#', label: 'Facebook', color: '#1877F2' },
-  { icon: <FaWhatsapp size={18} />, href: '#', label: 'WhatsApp', color: '#25D366' },
-  { icon: <FiYoutube size={18} />, href: '#', label: 'YouTube', color: '#FF0000' },
+  { icon: <AiFillTikTok size={18} />, href: 'https://www.tiktok.com/@dreamway46?_r=1&_t=ZS-98otuHN2mN2', label: 'Instagram', color: '#E1306C' },
+  { icon: <FiFacebook size={18} />, href: ' https://www.facebook.com/share/1Q7uM1457x', label: 'Facebook', color: '#1877F2' },
+  { icon: <FaWhatsapp size={18} />, href: 'https://wa.me/923013037141', label: 'WhatsApp', color: '#25D366' },
 ]
 
 export default function Footer() {
@@ -98,7 +98,7 @@ export default function Footer() {
             >
               Get Free Consultation <FiArrowRight size={16} />
             </Link>
-            <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer" style={{
+            <a href="https://wa.me/923013037141" target="_blank" rel="noreferrer" style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '13px 26px', borderRadius: '12px',
               background: '#25D366', color: 'white',
@@ -143,15 +143,15 @@ export default function Footer() {
               </div>
 
               <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', lineHeight: '1.8', marginBottom: '24px', maxWidth: '280px' }}>
-                Pakistan's most trusted education consultancy. Helping students access world-class universities across 15 countries since 2014.
+                Pakistan's most trusted education consultancy. Helping students access world-class universities across 15 countries since 2024.
               </p>
 
               {/* Contact info */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
                 {[
-                  { icon: <FaWhatsapp size={15} />, text: '+92 300 000 0000', href: 'https://wa.me/923000000000', color: '#25D366' },
-                  { icon: <FiMail size={15} />, text: 'info@dreamwayedu.com', href: 'mailto:info@dreamwayedu.com', color: '#23AAA6' },
-                  { icon: <FiMapPin size={15} />, text: 'Lahore, Pakistan', href: '#', color: '#C97E5E' },
+                  { icon: <FaWhatsapp size={15} />, text: '+92 3013037141', href: 'https://wa.me/923013037141', color: '#25D366' },
+                  { icon: <FiMail size={15} />, text: 'dreamwaylahore@gmail.com', href: 'mailto:dreamwaylahore@gmail.com', color: '#23AAA6' },
+                  { icon: <FiMapPin size={15} />, text: 'Lahore, Pakistan', href: 'https://maps.app.goo.gl/QncaQACsAEZwCiRd8', color: '#C97E5E' },
                 ].map(item => (
                   <a key={item.text} href={item.href} target="_blank" rel="noreferrer"
                     style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', transition: 'opacity 0.2s' }}
@@ -262,11 +262,10 @@ export default function Footer() {
             © {new Date().getFullYear()} Dreamway Education. All rights reserved.
           </p>
           <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.3)' }}>
-            Lahore, Pakistan — Est. 2014
+            Lahore, Pakistan — Est. 2024
           </p>
         </div>
       </div>
-
     </footer>
   )
 }
