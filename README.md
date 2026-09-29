@@ -5,7 +5,11 @@ Pakistan's Premier Study Abroad Consultancy
 
 Overview
 
-Dreamway Education is a fully responsive, modern website for a professional study abroad consultancy based in Lahore, Pakistan. The platform helps Pakistani students discover universities, explore study destinations, and book free consultations — all through a premium, world-class web experience.
+Dreamway Education is a fully responsive, modern website
+for a professional study abroad consultancy based in Lahore, 
+Pakistan. The platform helps Pakistani students discover universities,
+explore study destinations, and book free consultations — all through
+a premium, world-class web experience.
 
 ---
 
