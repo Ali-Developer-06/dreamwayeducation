@@ -1,4 +1,4 @@
-```md
+i```md
 Dreamway Education
 Pakistan's Premier Study Abroad Consultancy
 
@@ -42,7 +42,8 @@ Typography
 
 Tech Stack
 
-React 19, Vite, Tailwind CSS v4, Framer Motion, React Router v6, Embla Carousel, React Icons
+React 19, Vite, Tailwind CSS v4, Framer Motion, React Router v6, 
+Embla Carousel, React Icons
 
 ---
 
