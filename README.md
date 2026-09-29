@@ -40,18 +40,6 @@ Typography
 
 ---
 
-Pages
-
-Home            /                     Hero, Stats, Services, Countries, Process, Why Us, Testimonials, FAQ, CTA
-Countries       /countries            All 15 destinations with region filter
-Country Detail  /countries/:slug      Per-country info, universities, programs, requirements
-About           /about                Mission, values, timeline, team
-Testimonials    /testimonials         Masonry grid with country filter
-Contact         /contact              Form, WhatsApp, map, office hours, socials
-Not Found       *                     Custom 404 page
-
----
-
 Tech Stack
 
 React 19, Vite, Tailwind CSS v4, Framer Motion, React Router v6, Embla Carousel, React Icons
