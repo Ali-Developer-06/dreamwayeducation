@@ -91,5 +91,3 @@ License
 This project is private and proprietary.
 © 2025 Dreamway Education. All rights reserved.
 ```
-
-Clean, professional, no symbols — GitHub pe bilkul proper dikhega! ✅
